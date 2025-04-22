@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Send HTML Email - Google Security Alert</title>
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+</head>
+<body>
+  <h2>Security Alert from Google</h2>
+  <p>Click the button below to review your account activity:</p>
+  <button onclick="sendEmail()">Send Email</button>
+
+  <script>
+    function sendEmail() {
+      Email.send({
+        Host: "smtp.ionos.com",  // Ionos SMTP server
+        Username: "admin@bentleyplayz.com",  // Your email address
+        Password: "Tech_Man1?",  // Your Ionos password or App Password
+        To: "bentleyplayz37@gmail.com",  // Recipient's email (your Gmail address)
+        From: "admin@bentleyplayz.com",  // Your email address
+        Subject: "Security Alert from Google",
+        Body: `
+          <html>
+            <h2>We detected a suspicious sign-in attempt to your Google Account.</h2>
+            <p>If this wasn't you, please review your recent activity immediately.</p>
+            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Review Activity</a>
+          </html>
+        `
+      }).then(function(response) {
+        alert('Email sent successfully');
+      }).catch(function(error) {
+        alert('Failed to send email');
+      });
+    }
+  </script>
+</body>
+</html>
