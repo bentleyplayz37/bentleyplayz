@@ -32,6 +32,4 @@
         alert('Failed to send email');
       });
     }
-  </script>
-</body>
-</html>
+  </script</html>
